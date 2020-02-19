@@ -21,9 +21,9 @@ app = Flask(__name__, template_folder='templates')
 
 
 app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-04.cleardb.net'
-app.config['MYSQL_USER'] = 'b764fdbb0ee606'
-app.config['MYSQL_PASSWORD'] = '71f585e4'
-app.config['MYSQL_DB'] = 'heroku_9a7dcb3a32592af'
+app.config['MYSQL_USER'] = 'bb6943b447ffa7'
+app.config['MYSQL_PASSWORD'] = 'd2103eef'
+app.config['MYSQL_DB'] = 'heroku_7ecb3529b8fc607'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql2 = MySQL(app)
 
@@ -120,10 +120,10 @@ def manageModel(name):
     type = result['type']
     on = 'เปิดใช้งาน'
     off = 'ปิด'
-    cur.execute("UPDATE `heroku_9a7dcb3a32592af`.`model` SET `status` = %s  WHERE (`type` = %s AND `status` = %s) ",(off,type,on))
+    cur.execute("UPDATE `heroku_7ecb3529b8fc607`.`model` SET `status` = %s  WHERE (`type` = %s AND `status` = %s) ",(off,type,on))
     mysql2.connection.commit()
 
-    cur.execute("UPDATE `heroku_9a7dcb3a32592af`.`model` SET `status` = %s  WHERE (`nameModel` = %s) ",(on,name))
+    cur.execute("UPDATE `heroku_7ecb3529b8fc607`.`model` SET `status` = %s  WHERE (`nameModel` = %s) ",(on,name))
     mysql2.connection.commit()
     flash('เปลี่ยนโมเดลสำเร็จ','success')
 
@@ -135,7 +135,7 @@ def manageModel(name):
 def backoffice():
     if session['isAdmin'] == True:
         if request.method == 'POST':
-            conn = mysql.connector.connect(host = "us-cdbr-iron-east-04.cleardb.net",user = "b764fdbb0ee606", passwd = "71f585e4",database = "heroku_9a7dcb3a32592af", port='3306')
+            conn = mysql.connector.connect(host = "us-cdbr-iron-east-04.cleardb.net",user = "bb6943b447ffa7", passwd = "d2103eef",database = "heroku_7ecb3529b8fc607", port='3306')
             SQL_Query = pd.read_sql_query(''' SELECT sys,dia,hr,result,phase FROM data ''', conn)
             DataSet = pd.DataFrame(SQL_Query)
             X = DataSet.loc[::,'sys':'hr']
@@ -235,7 +235,7 @@ def changepsswrd():
         password_candidate = request.form['oldpsswrd']
         newpassword = sha256_crypt.encrypt(str(form.password.data))
         if sha256_crypt.verify(password_candidate,password):
-            cur.execute("UPDATE `heroku_9a7dcb3a32592af`.`user` SET `password` = %s  WHERE (`username` = %s) ",(newpassword,user_id))
+            cur.execute("UPDATE `heroku_7ecb3529b8fc607`.`user` SET `password` = %s  WHERE (`username` = %s) ",(newpassword,user_id))
             mysql2.connection.commit()
             flash('แก้ไขรหัสผ่านสำเร็จ','success')
             return redirect(url_for('changepsswrd'))
@@ -409,7 +409,7 @@ def update():
         bmi2=Decimal(bmi).quantize(Decimal('.01'), rounding=ROUND_UP)
 
         cur = mysql2.connection.cursor()
-        cur.execute("UPDATE `heroku_9a7dcb3a32592af`.`user` SET `name` = %s , `date_birth` = %s ,`weight` = %s ,`height` = %s ,`bmi` = %s , `blood_type` = %s WHERE (`username` = %s) ",(name,idate,weight,height,bmi2,blood_type,user_id))
+        cur.execute("UPDATE `heroku_7ecb3529b8fc607`.`user` SET `name` = %s , `date_birth` = %s ,`weight` = %s ,`height` = %s ,`bmi` = %s , `blood_type` = %s WHERE (`username` = %s) ",(name,idate,weight,height,bmi2,blood_type,user_id))
         mysql2.connection.commit()
         flash('แก้ไขข้อมูลส่วนตัวสำเร็จ','success')
         return redirect(url_for('update'))
