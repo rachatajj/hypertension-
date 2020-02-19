@@ -11,8 +11,7 @@ from datetime import date,datetime
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
 import numpy as np
-import os.path
-os.path.isfile('login.html')
+
 
 
 
@@ -21,10 +20,10 @@ app = Flask(__name__, template_folder='templates')
 
 
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
-app.config['MYSQL_DB'] = 'hypertension'
+app.config['MYSQL_HOST'] = 'us-cdbr-iron-east-04.cleardb.net'
+app.config['MYSQL_USER'] = 'b755e16386a161'
+app.config['MYSQL_PASSWORD'] = 'b1455ec2'
+app.config['MYSQL_DB'] = 'heroku_f1f101244490848'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql2 = MySQL(app)
 
@@ -121,10 +120,10 @@ def manageModel(name):
     type = result['type']
     on = 'เปิดใช้งาน'
     off = 'ปิด'
-    cur.execute("UPDATE `hypertension`.`model` SET `status` = %s  WHERE (`type` = %s AND `status` = %s) ",(off,type,on))
+    cur.execute("UPDATE `heroku_f1f101244490848`.`model` SET `status` = %s  WHERE (`type` = %s AND `status` = %s) ",(off,type,on))
     mysql2.connection.commit()
 
-    cur.execute("UPDATE `hypertension`.`model` SET `status` = %s  WHERE (`nameModel` = %s) ",(on,name))
+    cur.execute("UPDATE `heroku_f1f101244490848`.`model` SET `status` = %s  WHERE (`nameModel` = %s) ",(on,name))
     mysql2.connection.commit()
     flash('เปลี่ยนโมเดลสำเร็จ','success')
 
@@ -136,7 +135,7 @@ def manageModel(name):
 def backoffice():
     if session['isAdmin'] == True:
         if request.method == 'POST':
-            conn = mysql.connector.connect(host = "localhost",user = "root", passwd = "root",database = "hypertension", port='3306')
+            conn = mysql.connector.connect(host = "us-cdbr-iron-east-04.cleardb.net",user = "b755e16386a161", passwd = "b1455ec2",database = "heroku_f1f101244490848", port='3306')
             SQL_Query = pd.read_sql_query(''' SELECT sys,dia,hr,result,phase FROM data ''', conn)
             DataSet = pd.DataFrame(SQL_Query)
             X = DataSet.loc[::,'sys':'hr']
@@ -236,7 +235,7 @@ def changepsswrd():
         password_candidate = request.form['oldpsswrd']
         newpassword = sha256_crypt.encrypt(str(form.password.data))
         if sha256_crypt.verify(password_candidate,password):
-            cur.execute("UPDATE `hypertension`.`user` SET `password` = %s  WHERE (`username` = %s) ",(newpassword,user_id))
+            cur.execute("UPDATE `heroku_f1f101244490848`.`user` SET `password` = %s  WHERE (`username` = %s) ",(newpassword,user_id))
             mysql2.connection.commit()
             flash('แก้ไขรหัสผ่านสำเร็จ','success')
             return redirect(url_for('changepsswrd'))
@@ -410,7 +409,7 @@ def update():
         bmi2=Decimal(bmi).quantize(Decimal('.01'), rounding=ROUND_UP)
 
         cur = mysql2.connection.cursor()
-        cur.execute("UPDATE `hypertension`.`user` SET `name` = %s , `date_birth` = %s ,`weight` = %s ,`height` = %s ,`bmi` = %s , `blood_type` = %s WHERE (`username` = %s) ",(name,idate,weight,height,bmi2,blood_type,user_id))
+        cur.execute("UPDATE `heroku_f1f101244490848`.`user` SET `name` = %s , `date_birth` = %s ,`weight` = %s ,`height` = %s ,`bmi` = %s , `blood_type` = %s WHERE (`username` = %s) ",(name,idate,weight,height,bmi2,blood_type,user_id))
         mysql2.connection.commit()
         flash('แก้ไขข้อมูลส่วนตัวสำเร็จ','success')
         return redirect(url_for('update'))
